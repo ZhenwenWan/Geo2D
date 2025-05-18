@@ -1,0 +1,31 @@
+global ctx;
+
+ctx=exec("app:/scripting/library/make.ewsl").create_context();
+
+ctx.set_compiler("gcc","C:/Octave-7.2.0/mingw64/bin/");
+ctx.set_path_source("C:/DongJun/em2dsolver/Geo2d/SRC/");
+ctx.add_include("C:/DongJun/em2dsolver/Geo2d/include/");
+ctx.compiler.tools["gfortran"].add_flag("-fallow-argument-mismatch");
+
+ctx.add_flag("-DUSE_ISO_C_BINDINGS");
+ctx.add_flag("-O2");
+
+ctx.enter("test.exe","executable");
+
+       ctx.add_link("-lgfortran -lquadmath");
+       ctx.add_link("../lib/ewa_base.lib");
+       ctx.auto_compile_path("",
+		"""
+		dash.cpp
+		dashTrain.cpp
+		dashLoop.cpp
+		base2d.cpp
+		polygon.cpp
+		geometric_structures.cpp
+		main.cpp
+		"""
+	);
+ctx.leave();
+
+
+
